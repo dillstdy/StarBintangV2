@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101a42">
+  <meta name="description" content="StarBintangV2 — galeri foto dan video kenangan bersama.">
+  <title>StarBintangV2 — Galeri Kenangan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-star">✦</span><span>Star<span class="brand-accent">Bintang</span><small>V2 · MEMORY GALLERY</small></span></a>
+    <nav><a href="#galeri">Galeri</a><a href="#tentang">Tentang</a></nav>
+    <button class="button button-outline" id="authButton">Upload Karepmu</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow"><i></i> OUR LITTLE UNIVERSE</span>
+        <h1>Setiap momen<br>punya <span>ceritanya. Kalo kata alip " Kita ganteng kaya LEONARDO "</span></h1>
+        <p>Simpan, lihat kembali, dan bagikan foto serta video kenangan dalam satu tempat.</p>
+        <div class="hero-actions"><a class="button button-yellow" href="#galeri">Lihat kenangan <b>↗</b></a><span class="tiny-note">Foto · Video · Cerita</span></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="glass-card card-back"><span>✦</span><small>GOOD TIMES</small></div>
+        <div class="glass-card card-front"><div class="sun">✦</div><strong>MEMORIES</strong><small>FOREVER IN OUR HEART</small></div>
+        <span class="float-star star-a">✦</span><span class="float-star star-b">✧</span><span class="float-star star-c">✦</span>
+      </div>
+    </section>
+
+    <section class="gallery-section" id="galeri">
+      <div class="section-heading"><div><span class="eyebrow">MEMORY COLLECTION</span><h2>Galeri <span>Kenangan</span></h2><p>Tekan foto atau video untuk melihat ukuran aslinya.</p></div>
+        <div class="gallery-tools"><input id="searchInput" type="search" placeholder="Cari kenangan..."><button class="button button-red" id="uploadButton">＋ Tambah media</button></div>
+      </div>
+      <div class="status-line" id="statusLine">Menghubungkan ke galeri...</div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+      <div class="empty-state" id="emptyState" hidden><div>✧</div><h3>Belum ada kenangan</h3><p>Media yang diunggah akan muncul di sini.</p></div>
+    </section>
+
+    <section class="about" id="tentang"><div class="about-mark">✦</div><div><span class="eyebrow">MADE TO REMEMBER</span><h2>Kenangan kecil,<br><span>cerita yang besar.</span></h2></div><p>StarBintangV2 adalah Tempat kita membagikan foto dan video AIB kita, untuk hari ini dan esok. kata kata hari ini dari mas wahyu "Cari Aku Di Rasa Sesalmu. ADIOSSSS"</p></section>
+  </main>
+
+  <footer><span>✦ StarBintangV2. admin mau sad dulu. " Untuk kita semua web ini mungkin bisa kita kenang terus dan ada selalu, jikalau kau rindu open this web BRO.ADIOSSSS  </span><span>Made with memories <b>♥ cinta mumet. salam dari saya F untuk STARBINTANG</b></span></footer>
+
+  <input type="file" id="fileInput" accept="image/*,video/*" hidden>
+  <div class="modal" id="viewerModal" aria-hidden="true"><button class="modal-close" id="closeViewer" aria-label="Tutup">×</button><div class="viewer-content" id="viewerContent"></div><div class="viewer-caption"><span id="viewerTitle"></span><a id="downloadLink" class="button button-yellow" href="#" download>↓ Download</a></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
