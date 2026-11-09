@@ -101,3 +101,84 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") { closeViewe
   if (!configured) { await loadGallery(); return; }
   await loadGallery();
 })();
+
+/* ==========================================
+   STARBINTANG V2 — 3D INTERACTIONS
+   ========================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  // 1. 3D TILT EFFECT
+  const gallery = document.getElementById("galleryGrid");
+
+  if (gallery) {
+    gallery.addEventListener("pointermove", (event) => {
+      if (window.innerWidth <= 600) return;
+      if (event.pointerType === "touch") return;
+
+      const card = event.target.closest(".media-card");
+      if (!card) return;
+
+      const rect = card.getBoundingClientRect();
+
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+
+      const rotateY = (x - 0.5) * 12;
+      const rotateX = (0.5 - y) * 12;
+
+      card.style.setProperty("--tilt-x", `${rotateX}deg`);
+      card.style.setProperty("--tilt-y", `${rotateY}deg`);
+    });
+
+    gallery.addEventListener("pointerleave", () => {
+      gallery.querySelectorAll(".media-card").forEach(card => {
+        card.style.setProperty("--tilt-x", "0deg");
+        card.style.setProperty("--tilt-y", "0deg");
+      });
+    }, true);
+  }
+
+  // 2. MOBILE FLOATING DOCK
+  if (window.innerWidth <= 600 &&
+      !document.querySelector(".mobile-dock")) {
+
+    const dock = document.createElement("nav");
+    dock.className = "mobile-dock";
+    dock.setAttribute("aria-label", "Navigasi utama");
+
+    dock.innerHTML = `
+      <a href="#" aria-label="Beranda">
+        <span class="dock-icon">⌂</span>
+        <span>Home</span>
+      </a>
+
+      <a href="#galeri" aria-label="Galeri">
+        <span class="dock-icon">▦</span>
+        <span>Galeri</span>
+      </a>
+
+      <button class="dock-upload" type="button" aria-label="Upload media">
+        <span class="dock-icon">＋</span>
+        <span>Upload</span>
+      </button>
+
+      <a href="#tentang" aria-label="Tentang">
+        <span class="dock-icon">✦</span>
+        <span>Tentang</span>
+      </a>
+    `;
+
+    document.body.appendChild(dock);
+
+    const uploadButton = document.getElementById("uploadButton");
+    const dockUpload = dock.querySelector(".dock-upload");
+
+    if (uploadButton && dockUpload) {
+      dockUpload.addEventListener("click", () => {
+        uploadButton.click();
+      });
+    }
+  }
+
+});
