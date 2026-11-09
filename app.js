@@ -407,3 +407,41 @@ document.addEventListener("DOMContentLoaded", () => {
     initBubbleNavigation();
   }
 })();
+
+/* =====================================
+   STARBINTANG INTRO CONTROLLER
+===================================== */
+
+(function () {
+  const intro = document.getElementById("starIntro");
+  const skip = document.getElementById("skipIntro");
+
+  if (!intro) return;
+
+  function closeIntro() {
+    if (!intro.isConnected) return;
+
+    intro.classList.add("intro-exit");
+
+    setTimeout(() => {
+      intro.remove();
+    }, 1100);
+  }
+
+  // Hanya tampil sekali setiap sesi browser
+  if (sessionStorage.getItem("starbintangIntroSeen")) {
+    intro.remove();
+    return;
+  }
+
+  sessionStorage.setItem("starbintangIntroSeen", "true");
+
+  // Tombol lewati
+  if (skip) {
+    skip.addEventListener("click", closeIntro);
+  }
+
+  // Durasi intro
+  setTimeout(closeIntro, 5200);
+
+})();
