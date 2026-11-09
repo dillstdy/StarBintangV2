@@ -1052,3 +1052,11 @@ footer b {
   opacity: 1;
   transform: scale(1);
 }
+
+const mobileUploadButton = document.getElementById("mobileUploadButton");
+
+if (mobileUploadButton) {
+  mobileUploadButton.addEventListener("click", () => {
+    document.getElementById("uploadButton")?.click();
+  });
+}
