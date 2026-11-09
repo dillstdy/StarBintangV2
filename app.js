@@ -224,32 +224,34 @@ if (window.innerWidth <= 600 &&
     setActive(0);
 
     // Smooth navigation
-    links.forEach((link, index) => {
+   links.forEach((link, index) => {
+  link.addEventListener("click", function(event) {
 
-      link.addEventListener("click", function (event) {
+    // Game: biarkan browser membuka game.html
+    if (link.getAttribute("href") === "game.html") {
+      return;
+    }
 
-        event.preventDefault();
+    event.preventDefault();
 
-        setActive(index);
+    const dockIndex = index === 3 ? 4 : index;
+    setActive(dockIndex);
 
-        const target = sections[index];
+    const target = sections[index];
 
-        if (target) {
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        } else if (index === 0) {
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-          });
-        }
-
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
       });
-
-    });
-
+    } else if (index === 0) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+  });
+});
     // Upload button animation
     if (upload) {
 
