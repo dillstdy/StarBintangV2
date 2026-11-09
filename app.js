@@ -300,3 +300,110 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 })();
+
+/* LIQUID BUBBLE DRAG NAVIGATION */
+
+(function () {
+  function initBubbleNavigation() {
+    const dock = document.querySelector(".mobile-dock");
+    if (!dock || dock.dataset.bubbleReady) return;
+
+    dock.dataset.bubbleReady = "true";
+
+    const items = [
+      ...dock.querySelectorAll("a, .dock-upload")
+    ];
+
+    const bubble = document.createElement("div");
+    bubble.className = "liquid-bubble";
+    dock.appendChild(bubble);
+
+    let dragging = false;
+    let activeIndex = 0;
+
+    function getIndex(x, y) {
+      const found = items.findIndex(item => {
+        const r = item.getBoundingClientRect();
+        return x >= r.left - 5 && x <= r.right + 5 &&
+               y >= r.top - 5 && y <= r.bottom + 5;
+      });
+      return found;
+    }
+
+    function moveBubble(index) {
+      if (index < 0) return;
+
+      const rect = items[index].getBoundingClientRect();
+      const dockRect = dock.getBoundingClientRect();
+
+      bubble.style.left =
+        (rect.left + rect.width / 2 - dockRect.left) + "px";
+
+      bubble.style.top =
+        (rect.top + rect.height / 2 - dockRect.top) + "px";
+
+      items.forEach((item, i) => {
+        item.classList.toggle("bubble-active", i === index);
+      });
+
+      activeIndex = index;
+    }
+
+    dock.addEventListener("pointerdown", event => {
+      if (event.target.closest("button") &&
+          !event.target.closest(".dock-upload")) return;
+
+      const index = getIndex(event.clientX, event.clientY);
+      if (index < 0) return;
+
+      dragging = true;
+      dock.classList.add("dragging-dock");
+      bubble.classList.add("visible", "dragging");
+
+      moveBubble(index);
+
+      try {
+        dock.setPointerCapture(event.pointerId);
+      } catch (_) {}
+    });
+
+    dock.addEventListener("pointermove", event => {
+      if (!dragging) return;
+
+      const index = getIndex(event.clientX, event.clientY);
+      if (index >= 0) moveBubble(index);
+    });
+
+    function finishDrag() {
+      if (!dragging) return;
+
+      dragging = false;
+      dock.classList.remove("dragging-dock");
+      bubble.classList.remove("dragging");
+
+      setTimeout(() => {
+        bubble.classList.remove("visible");
+      }, 350);
+
+      if (activeIndex === 2) {
+        const upload = document.getElementById("uploadButton");
+        if (upload) upload.click();
+        return;
+      }
+
+      const link = items[activeIndex];
+      if (link && link.tagName === "A") {
+        link.click();
+      }
+    }
+
+    dock.addEventListener("pointerup", finishDrag);
+    dock.addEventListener("pointercancel", finishDrag);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initBubbleNavigation);
+  } else {
+    initBubbleNavigation();
+  }
+})();
