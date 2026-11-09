@@ -140,48 +140,51 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 2. MOBILE FLOATING DOCK
-  if (window.innerWidth <= 600 &&
-      !document.querySelector(".mobile-dock")) {
+if (window.innerWidth <= 600 &&
+    !document.querySelector(".mobile-dock")) {
 
-    const dock = document.createElement("nav");
-    dock.className = "mobile-dock";
-    dock.setAttribute("aria-label", "Navigasi utama");
+  const dock = document.createElement("nav");
+  dock.className = "mobile-dock";
+  dock.setAttribute("aria-label", "Navigasi utama");
 
-    dock.innerHTML = `
-      <a href="#" aria-label="Beranda">
-        <span class="dock-icon">⌂</span>
-        <span>Home</span>
-      </a>
+  dock.innerHTML = `
+    <a href="#" aria-label="Beranda">
+      <span class="dock-icon">⌂</span>
+      <span>Home</span>
+    </a>
 
-      <a href="#galeri" aria-label="Galeri">
-        <span class="dock-icon">▦</span>
-        <span>Galeri</span>
-      </a>
+    <a href="#galeri" aria-label="Galeri">
+      <span class="dock-icon">▦</span>
+      <span>Galeri</span>
+    </a>
 
-      <button class="dock-upload" type="button" aria-label="Upload media">
-        <span class="dock-icon">＋</span>
-        <span>Upload</span>
-      </button>
+    <a href="game.html" aria-label="Game">
+      <span class="dock-icon">🎮</span>
+      <span>Game</span>
+    </a>
 
-      <a href="#tentang" aria-label="Tentang">
-        <span class="dock-icon">✦</span>
-        <span>Tentang</span>
-      </a>
-    `;
+    <button class="dock-upload" type="button" aria-label="Upload media">
+      <span class="dock-icon">＋</span>
+      <span>Upload</span>
+    </button>
 
-    document.body.appendChild(dock);
+    <a href="#tentang" aria-label="Tentang">
+      <span class="dock-icon">✦</span>
+      <span>Tentang</span>
+    </a>
+  `;
 
-    const uploadButton = document.getElementById("uploadButton");
-    const dockUpload = dock.querySelector(".dock-upload");
+  document.body.appendChild(dock);
 
-    if (uploadButton && dockUpload) {
-      dockUpload.addEventListener("click", () => {
-        uploadButton.click();
-      });
-    }
+  const uploadButton = document.getElementById("uploadButton");
+  const dockUpload = dock.querySelector(".dock-upload");
+
+  if (uploadButton && dockUpload) {
+    dockUpload.addEventListener("click", () => {
+      uploadButton.click();
+    });
   }
-
-});
+}
 
 /* =====================================
    STARBINTANG — iOS NAVIGATION ENGINE
@@ -385,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bubble.classList.remove("visible");
       }, 350);
 
-      if (activeIndex === 2) {
+      if (activeIndex === 3) {
         const upload = document.getElementById("uploadButton");
         if (upload) upload.click();
         return;
