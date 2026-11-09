@@ -182,3 +182,121 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
+/* =====================================
+   STARBINTANG — iOS NAVIGATION ENGINE
+===================================== */
+
+(function () {
+
+  function initLiquidNavigation() {
+
+    const dock = document.querySelector(".mobile-dock");
+
+    if (!dock || dock.dataset.liquidReady === "true") return;
+
+    dock.dataset.liquidReady = "true";
+
+    const links = [...dock.querySelectorAll("a")];
+    const upload = dock.querySelector(".dock-upload");
+
+    const sections = [
+      document.querySelector(".hero"),
+      document.querySelector(".gallery-section"),
+      null,
+      document.querySelector(".about")
+    ];
+
+    // Sliding active indicator
+    function setActive(index) {
+
+      dock.style.setProperty("--active-index", index);
+
+      links.forEach((link, i) => {
+        link.classList.toggle("active", i === index);
+      });
+
+    }
+
+    setActive(0);
+
+    // Smooth navigation
+    links.forEach((link, index) => {
+
+      link.addEventListener("click", function (event) {
+
+        event.preventDefault();
+
+        setActive(index);
+
+        const target = sections[index];
+
+        if (target) {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        } else if (index === 0) {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+        }
+
+      });
+
+    });
+
+    // Upload button animation
+    if (upload) {
+
+      upload.addEventListener("click", function () {
+
+        upload.animate(
+          [
+            { transform: "scale(1)" },
+            { transform: "scale(.82)" },
+            { transform: "scale(1.12)" },
+            { transform: "scale(1)" }
+          ],
+          {
+            duration: 450,
+            easing: "cubic-bezier(.22,1.4,.36,1)"
+          }
+        );
+
+      });
+
+    }
+
+    // Automatically update selected menu while scrolling
+    const observer = new IntersectionObserver(entries => {
+
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+      if (!visible.length) return;
+
+      const index = sections.indexOf(visible[0].target);
+
+      if (index >= 0) setActive(index);
+
+    }, {
+      threshold: [0.2, 0.4, 0.6],
+      rootMargin: "-15% 0px -35% 0px"
+    });
+
+    sections.forEach(section => {
+      if (section) observer.observe(section);
+    });
+
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initLiquidNavigation);
+  } else {
+    initLiquidNavigation();
+  }
+
+})();
