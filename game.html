@@ -360,6 +360,9 @@ button:active{transform:scale(.96)}
 "use strict";
 
 const canvas=document.getElementById("game");
+const bgMusic = new Audio("meteor-dodge-music.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.45;
 const ctx=canvas.getContext("2d");
 const arena=document.getElementById("arena");
 
@@ -475,6 +478,9 @@ function startGame(){
   overlay.classList.add("hidden");
   lastTime=performance.now();
   pauseButton.textContent="Ⅱ Jeda";
+
+  bgMusic.currentTime = 0;
+bgMusic.play().catch(console.warn);
 }
 
 function pauseGame(){
@@ -487,6 +493,8 @@ function pauseGame(){
   document.getElementById("levelList").style.display="none";
   overlay.classList.remove("hidden");
   pauseButton.textContent="▶ Lanjut";
+
+  bgMusic.pause();
 }
 
 function resumeGame(){
@@ -495,6 +503,8 @@ function resumeGame(){
   overlay.classList.add("hidden");
   lastTime=performance.now();
   pauseButton.textContent="Ⅱ Jeda";
+
+  bgMusic.play().catch(console.warn);
 }
 
 function endGame(){
@@ -507,6 +517,9 @@ function endGame(){
     best=score;
     localStorage.setItem("meteorDodgeBest",best);
     bestText.textContent=best;
+
+    bgMusic.pause();
+bgMusic.currentTime = 0;
   }
 
   overlayTitle.textContent="💥 Game Over";
