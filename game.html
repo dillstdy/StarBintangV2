@@ -1,0 +1,838 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d1c">
+<title>Meteor Dodge | StarBintang</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --blue:#56aaff;
+  --purple:#8866ff;
+  --glass:rgba(255,255,255,.075);
+  --line:rgba(255,255,255,.14);
+}
+
+body{
+  min-height:100vh;
+  overflow:hidden;
+  color:white;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:
+    radial-gradient(ellipse at 50% 0%,#203d70 0%,transparent 55%),
+    radial-gradient(ellipse at 100% 100%,#251c55 0%,transparent 45%),
+    linear-gradient(145deg,#080d1c,#10172d 60%,#090d19);
+}
+
+.game-page{
+  width:min(100%,950px);
+  min-height:100vh;
+  margin:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.brand{
+  color:#a9caff;
+  font-size:13px;
+  letter-spacing:3px;
+  font-weight:900;
+}
+
+.back{
+  color:white;
+  text-decoration:none;
+  padding:10px 17px;
+  border:1px solid var(--line);
+  background:var(--glass);
+  border-radius:30px;
+  backdrop-filter:blur(20px);
+  transition:.3s;
+}
+
+.back:hover{
+  background:#ffffff20;
+  transform:translateY(-2px);
+}
+
+h1{
+  font-size:clamp(32px,7vw,58px);
+  letter-spacing:-2px;
+  text-align:center;
+  margin-top:5px;
+  text-shadow:0 0 35px #579dff70;
+}
+
+.subtitle{
+  color:#9eacc9;
+  text-align:center;
+  font-size:13px;
+  margin-top:-10px;
+}
+
+.stats{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.stat{
+  min-width:105px;
+  padding:11px 20px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  text-align:center;
+  box-shadow:0 12px 35px #0003,inset 0 1px #ffffff15;
+  transition:.3s;
+}
+
+.stat small{
+  display:block;
+  color:#9eacc9;
+  font-size:10px;
+  letter-spacing:2px;
+  margin-bottom:5px;
+}
+
+.stat strong{font-size:23px}
+
+.arena{
+  position:relative;
+  flex:1;
+  min-height:300px;
+  max-height:570px;
+  overflow:hidden;
+  border:1px solid #9bc5ff40;
+  border-radius:28px;
+  background:linear-gradient(180deg,#101d3a,#080d1b);
+  box-shadow:0 25px 80px #0008,inset 0 1px #ffffff20;
+  isolation:isolate;
+}
+
+canvas{
+  width:100%;
+  height:100%;
+  display:block;
+  touch-action:none;
+}
+
+.arena.shake{
+  animation:shake .32s ease;
+}
+
+@keyframes shake{
+  0%,100%{transform:translate(0)}
+  20%{transform:translate(-7px,3px)}
+  40%{transform:translate(6px,-4px)}
+  60%{transform:translate(-5px,2px)}
+  80%{transform:translate(4px,-2px)}
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  z-index:5;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:22px;
+  text-align:center;
+  background:rgba(5,12,28,.76);
+  backdrop-filter:blur(18px);
+  transition:opacity .3s,visibility .3s;
+}
+
+.overlay.hidden{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+.overlay h2{
+  font-size:clamp(27px,6vw,42px);
+  margin-bottom:9px;
+}
+
+.overlay p{
+  max-width:350px;
+  color:#b7c5e1;
+  font-size:13px;
+  line-height:1.7;
+  margin-bottom:18px;
+}
+
+button{
+  border:1px solid #ffffff55;
+  border-radius:30px;
+  padding:13px 25px;
+  color:white;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  background:linear-gradient(135deg,#438dff,#7459ed);
+  box-shadow:0 8px 30px #397dff55;
+  transition:transform .25s,filter .25s,box-shadow .25s;
+}
+
+button:hover{
+  transform:translateY(-3px) scale(1.025);
+  filter:brightness(1.17);
+  box-shadow:0 12px 35px #397dff75;
+}
+
+button:active{transform:scale(.96)}
+
+.level-title{
+  color:#a9caff;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:3px;
+  margin:5px 0 12px;
+}
+
+.level-list{
+  width:min(100%,390px);
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin-bottom:18px;
+}
+
+.level-card{
+  padding:12px 5px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(15px);
+  cursor:pointer;
+  transition:.25s;
+}
+
+.level-card strong{
+  display:block;
+  font-size:13px;
+}
+
+.level-card small{
+  display:block;
+  color:#a7b6d1;
+  font-size:9px;
+  margin-top:5px;
+}
+
+.level-card.selected{
+  border-color:#73baff;
+  background:linear-gradient(145deg,#398bff55,#8b62ff55);
+  box-shadow:0 0 25px #438dff35,inset 0 1px #ffffff30;
+  transform:translateY(-3px);
+}
+
+.level-card:hover{background:#ffffff18}
+
+.overlay-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.game-controls{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.secondary{
+  background:#ffffff12;
+  border:1px solid #ffffff25;
+  box-shadow:none;
+}
+
+.hint{
+  color:#8796b5;
+  text-align:center;
+  font-size:12px;
+  padding-bottom:5px;
+}
+
+@media(max-width:600px){
+  .game-page{padding:15px;gap:13px}
+  .arena{min-height:350px;border-radius:22px}
+  .stat{min-width:90px;padding:9px 13px}
+  .stat strong{font-size:20px}
+  .level-list{grid-template-columns:repeat(3,1fr)}
+  .level-card{padding:11px 3px}
+}
+</style>
+</head>
+
+<body>
+<main class="game-page">
+
+<header class="top">
+  <div class="brand">✦ STARBINTANG</div>
+  <a class="back" href="index.html">← Kembali</a>
+</header>
+
+<h1>Meteor Dodge</h1>
+<p class="subtitle">Avoid the meteors. Survive the galaxy.</p>
+
+<section class="stats">
+  <div class="stat">
+    <small>SCORE</small>
+    <strong id="score">0</strong>
+  </div>
+  <div class="stat">
+    <small>BEST</small>
+    <strong id="best">0</strong>
+  </div>
+  <div class="stat">
+    <small>LEVEL</small>
+    <strong id="levelDisplay">01</strong>
+  </div>
+</section>
+
+<section class="arena" id="arena">
+  <canvas id="game"></canvas>
+
+  <div class="overlay" id="overlay">
+    <h2 id="overlayTitle">☄️ Meteor Dodge</h2>
+    <p id="overlayText">
+      Pilih level, kendalikan pesawatmu, dan hindari meteor
+      yang datang dari luar angkasa.
+    </p>
+
+    <div class="level-title">SELECT YOUR LEVEL</div>
+
+    <div class="level-list" id="levelList">
+      <button class="level-card selected" data-level="1">
+        <strong>01</strong><small>Beginner</small>
+      </button>
+      <button class="level-card" data-level="2">
+        <strong>02</strong><small>Easy</small>
+      </button>
+      <button class="level-card" data-level="3">
+        <strong>03</strong><small>Normal</small>
+      </button>
+      <button class="level-card" data-level="4">
+        <strong>04</strong><small>Hard</small>
+      </button>
+      <button class="level-card" data-level="5">
+        <strong>05</strong><small>Insane</small>
+      </button>
+    </div>
+
+    <div class="overlay-actions">
+      <button id="startButton">Mulai Bermain ✦</button>
+    </div>
+  </div>
+</section>
+
+<div class="game-controls">
+  <button class="secondary" id="pauseButton">Ⅱ Jeda</button>
+  <button class="secondary" id="restartButton">↻ Ulangi</button>
+</div>
+
+<p class="hint">
+  HP: Geser jari · Laptop: ← → atau A / D
+</p>
+
+</main>
+
+<script>
+(() => {
+"use strict";
+
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+const arena=document.getElementById("arena");
+
+const scoreText=document.getElementById("score");
+const bestText=document.getElementById("best");
+const levelDisplay=document.getElementById("levelDisplay");
+const overlay=document.getElementById("overlay");
+const overlayTitle=document.getElementById("overlayTitle");
+const overlayText=document.getElementById("overlayText");
+const startButton=document.getElementById("startButton");
+const pauseButton=document.getElementById("pauseButton");
+const restartButton=document.getElementById("restartButton");
+
+const levels=[
+  {name:"Beginner",speed:115,spawn:1.15},
+  {name:"Easy",speed:155,spawn:.95},
+  {name:"Normal",speed:195,spawn:.78},
+  {name:"Hard",speed:245,spawn:.62},
+  {name:"Insane",speed:300,spawn:.48}
+];
+
+let width=0,height=0;
+let state="menu";
+let score=0,best=Number(localStorage.getItem("meteorDodgeBest")||0);
+let selectedLevel=1;
+let lastTime=0,elapsed=0,spawnTimer=0;
+let meteors=[],stars=[],particles=[],trail=[];
+let keys={};
+let shake=0;
+
+const player={
+  x:0,y:0,radius:12,targetX:0
+};
+
+bestText.textContent=best;
+
+function resize(){
+  const rect=arena.getBoundingClientRect();
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+
+  width=rect.width;
+  height=rect.height;
+
+  canvas.width=width*dpr;
+  canvas.height=height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  player.y=height-48;
+  if(!player.x)player.x=width/2;
+  player.x=Math.max(18,Math.min(width-18,player.x));
+  player.targetX=player.x;
+
+  stars=Array.from({length:90},()=>({
+    x:Math.random()*width,
+    y:Math.random()*height,
+    size:Math.random()*1.8+.3,
+    speed:Math.random()*35+12,
+    alpha:Math.random()*.6+.3
+  }));
+}
+
+window.addEventListener("resize",resize);
+resize();
+
+function selectLevel(level){
+  selectedLevel=level;
+  levelDisplay.textContent=String(level).padStart(2,"0");
+
+  document.querySelectorAll(".level-card").forEach(card=>{
+    card.classList.toggle(
+      "selected",
+      Number(card.dataset.level)===level
+    );
+  });
+}
+
+document.querySelectorAll(".level-card").forEach(card=>{
+  card.addEventListener("click",()=>{
+    if(state==="playing")return;
+    selectLevel(Number(card.dataset.level));
+  });
+});
+
+function resetGame(){
+  score=0;
+  elapsed=0;
+  spawnTimer=0;
+  meteors=[];
+  particles=[];
+  trail=[];
+  shake=0;
+
+  player.x=width/2;
+  player.targetX=width/2;
+  player.y=height-48;
+
+  scoreText.textContent="0";
+}
+
+function showMenu(){
+  state="menu";
+  overlayTitle.textContent="☄️ Meteor Dodge";
+  overlayText.textContent=
+    "Pilih level tantanganmu. Seberapa jauh kamu bisa bertahan?";
+  startButton.textContent="Mulai Bermain ✦";
+  document.getElementById("levelList").style.display="grid";
+  overlay.classList.remove("hidden");
+}
+
+function startGame(){
+  resetGame();
+  state="playing";
+  overlay.classList.add("hidden");
+  lastTime=performance.now();
+  pauseButton.textContent="Ⅱ Jeda";
+}
+
+function pauseGame(){
+  if(state!=="playing")return;
+
+  state="paused";
+  overlayTitle.textContent="Ⅱ Game Dijeda";
+  overlayText.textContent="Siap melanjutkan petualanganmu?";
+  startButton.textContent="Lanjutkan";
+  document.getElementById("levelList").style.display="none";
+  overlay.classList.remove("hidden");
+  pauseButton.textContent="▶ Lanjut";
+}
+
+function resumeGame(){
+  if(state!=="paused")return;
+  state="playing";
+  overlay.classList.add("hidden");
+  lastTime=performance.now();
+  pauseButton.textContent="Ⅱ Jeda";
+}
+
+function endGame(){
+  if(state!=="playing")return;
+
+  state="over";
+  shake=12;
+
+  if(score>best){
+    best=score;
+    localStorage.setItem("meteorDodgeBest",best);
+    bestText.textContent=best;
+  }
+
+  overlayTitle.textContent="💥 Game Over";
+  overlayText.textContent=
+    `Skor ${score} · Level ${selectedLevel} (${levels[selectedLevel-1].name}). Coba pecahkan rekor terbaikmu!`;
+  startButton.textContent="Main Lagi";
+  document.getElementById("levelList").style.display="grid";
+  overlay.classList.remove("hidden");
+}
+
+function spawnMeteor(){
+  const level=levels[selectedLevel-1];
+  const radius=12+Math.random()*16;
+
+  meteors.push({
+    x:radius+Math.random()*(width-radius*2),
+    y:-radius,
+    radius,
+    speed:level.speed+Math.random()*75+elapsed*2,
+    rotation:Math.random()*6,
+    spin:(Math.random()-.5)*2,
+    trail:[]
+  });
+}
+
+function addParticles(x,y,color,count=12){
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=35+Math.random()*170;
+
+    particles.push({
+      x,y,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed,
+      life:.35+Math.random()*.5,
+      maxLife:.85,
+      size:1.5+Math.random()*3,
+      color
+    });
+  }
+}
+
+function drawBackground(dt){
+  ctx.fillStyle="#080f21";
+  ctx.fillRect(0,0,width,height);
+
+  stars.forEach(star=>{
+    if(state==="playing"){
+      star.y+=star.speed*dt*(1+selectedLevel*.12);
+      if(star.y>height){
+        star.y=0;
+        star.x=Math.random()*width;
+      }
+    }
+
+    ctx.globalAlpha=star.alpha;
+    ctx.fillStyle="#c5e4ff";
+    ctx.beginPath();
+    ctx.arc(star.x,star.y,star.size,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  ctx.globalAlpha=1;
+
+  const glow=ctx.createRadialGradient(
+    width/2,height*.55,5,
+    width/2,height*.55,height*.65
+  );
+  glow.addColorStop(0,"rgba(48,104,190,.12)");
+  glow.addColorStop(1,"rgba(8,15,33,0)");
+
+  ctx.fillStyle=glow;
+  ctx.fillRect(0,0,width,height);
+}
+
+function drawPlayer(){
+  // Jejak cahaya pesawat
+  trail.forEach((point,index)=>{
+    ctx.globalAlpha=point.life*.35;
+    ctx.fillStyle="#65caff";
+    ctx.beginPath();
+    ctx.arc(point.x,point.y,point.size,0,Math.PI*2);
+    ctx.fill();
+  });
+  ctx.globalAlpha=1;
+
+  ctx.save();
+  ctx.translate(player.x,player.y);
+
+  ctx.shadowColor="#55baff";
+  ctx.shadowBlur=28;
+
+  const gradient=ctx.createLinearGradient(0,-20,0,15);
+  gradient.addColorStop(0,"#ffffff");
+  gradient.addColorStop(.4,"#8fe4ff");
+  gradient.addColorStop(1,"#397dff");
+
+  ctx.fillStyle=gradient;
+  ctx.beginPath();
+  ctx.moveTo(0,-20);
+  ctx.lineTo(15,13);
+  ctx.lineTo(0,8);
+  ctx.lineTo(-15,13);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.shadowBlur=10;
+  ctx.fillStyle="#397dff";
+  ctx.beginPath();
+  ctx.arc(0,-3,4,0,Math.PI*2);
+  ctx.fill();
+
+  // Api mesin
+  if(state==="playing"){
+    const flame=7+Math.random()*8;
+    ctx.shadowColor="#65caff";
+    ctx.fillStyle="#65caff";
+    ctx.beginPath();
+    ctx.moveTo(-4,10);
+    ctx.lineTo(0,10+flame);
+    ctx.lineTo(4,10);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawMeteor(meteor){
+  ctx.save();
+  ctx.translate(meteor.x,meteor.y);
+  ctx.rotate(meteor.rotation);
+
+  ctx.shadowColor="#ff704c";
+  ctx.shadowBlur=20;
+
+  const gradient=ctx.createRadialGradient(
+    -5,-7,2,0,0,meteor.radius
+  );
+  gradient.addColorStop(0,"#ffe0ae");
+  gradient.addColorStop(.45,"#ff875e");
+  gradient.addColorStop(1,"#a63855");
+
+  ctx.fillStyle=gradient;
+  ctx.beginPath();
+
+  for(let i=0;i<9;i++){
+    const angle=i*Math.PI*2/9;
+    const r=meteor.radius*(i%2?.83:1.05);
+    const x=Math.cos(angle)*r;
+    const y=Math.sin(angle)*r;
+
+    if(i===0)ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+  }
+
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawParticles(dt){
+  particles.forEach(p=>{
+    p.x+=p.vx*dt;
+    p.y+=p.vy*dt;
+    p.life-=dt;
+
+    ctx.globalAlpha=Math.max(0,p.life/p.maxLife);
+    ctx.fillStyle=p.color;
+    ctx.shadowColor=p.color;
+    ctx.shadowBlur=12;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  ctx.globalAlpha=1;
+  ctx.shadowBlur=0;
+
+  particles=particles.filter(p=>p.life>0);
+}
+
+function collision(a,b){
+  const dx=a.x-b.x;
+  const dy=a.y-b.y;
+  return Math.hypot(dx,dy)<a.radius+b.radius*.72;
+}
+
+function update(dt){
+  elapsed+=dt;
+
+  const direction=
+    (keys.ArrowRight||keys.d||keys.D?1:0)-
+    (keys.ArrowLeft||keys.a||keys.A?1:0);
+
+  player.targetX+=direction*390*dt;
+  player.targetX=Math.max(18,Math.min(width-18,player.targetX));
+
+  player.x+=(player.targetX-player.x)*Math.min(1,dt*13);
+
+  trail.push({
+    x:player.x,
+    y:player.y+13,
+    size:2+Math.random()*3,
+    life:.45
+  });
+
+  trail.forEach(p=>p.life-=dt);
+  trail=trail.filter(p=>p.life>0);
+
+  spawnTimer+=dt;
+  const level=levels[selectedLevel-1];
+  const interval=Math.max(.25,level.spawn-elapsed*.003);
+
+  if(spawnTimer>=interval){
+    spawnTimer=0;
+    spawnMeteor();
+  }
+
+  for(const meteor of meteors){
+    meteor.y+=meteor.speed*dt;
+    meteor.rotation+=meteor.spin*dt;
+
+    if(collision(player,meteor)){
+      addParticles(meteor.x,meteor.y,"#ff956c",22);
+      endGame();
+      break;
+    }
+  }
+
+  meteors=meteors.filter(m=>m.y<height+60);
+
+  score=Math.floor(elapsed*10);
+  scoreText.textContent=score;
+}
+
+function render(time){
+  const dt=Math.min((time-lastTime)/1000||0,.04);
+  lastTime=time;
+
+  ctx.save();
+
+  if(shake>0){
+    ctx.translate(
+      (Math.random()-.5)*shake,
+      (Math.random()-.5)*shake
+    );
+    shake=Math.max(0,shake-dt*35);
+  }
+
+  drawBackground(dt);
+
+  if(state==="playing"){
+    update(dt);
+  }
+
+  meteors.forEach(drawMeteor);
+  drawParticles(dt);
+  drawPlayer();
+
+  ctx.restore();
+
+  requestAnimationFrame(render);
+}
+
+requestAnimationFrame(time=>{
+  lastTime=time;
+  render(time);
+});
+
+startButton.addEventListener("click",()=>{
+  if(state==="paused")resumeGame();
+  else startGame();
+});
+
+restartButton.addEventListener("click",showMenu);
+
+pauseButton.addEventListener("click",()=>{
+  if(state==="playing")pauseGame();
+  else if(state==="paused")resumeGame();
+});
+
+window.addEventListener("keydown",event=>{
+  keys[event.key]=true;
+
+  if(["ArrowLeft","ArrowRight"," "].includes(event.key)){
+    event.preventDefault();
+  }
+
+  if(event.key==="Escape"&&state==="playing"){
+    pauseGame();
+  }
+});
+
+window.addEventListener("keyup",event=>{
+  keys[event.key]=false;
+});
+
+canvas.addEventListener("pointerdown",event=>{
+  if(state!=="playing")return;
+  canvas.setPointerCapture(event.pointerId);
+  movePlayer(event);
+});
+
+canvas.addEventListener("pointermove",event=>{
+  if(state!=="playing")return;
+
+  if(event.pointerType==="touch"||event.buttons){
+    movePlayer(event);
+  }
+});
+
+function movePlayer(event){
+  const rect=canvas.getBoundingClientRect();
+  player.targetX=Math.max(
+    18,
+    Math.min(width-18,event.clientX-rect.left)
+  );
+}
+
+selectLevel(1);
+showMenu();
+
+})();
+</script>
+</body>
+</html>
