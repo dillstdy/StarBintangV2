@@ -1016,3 +1016,39 @@ footer b {
     transition-duration: .01ms !important;
   }
 }
+
+
+/* STARBINTANG GAME NAVIGATION */
+.topbar nav .game-nav {
+  color: #a9d4ff;
+  position: relative;
+  transition: .3s ease;
+}
+
+.topbar nav .game-nav::before {
+  content: "";
+  position: absolute;
+  inset: -8px -13px;
+  border-radius: 30px;
+  background: linear-gradient(
+    135deg,
+    rgba(65,145,255,.18),
+    rgba(135,85,255,.18)
+  );
+  border: 1px solid rgba(130,185,255,.25);
+  opacity: 0;
+  transform: scale(.85);
+  transition: .3s ease;
+  z-index: -1;
+}
+
+.topbar nav .game-nav:hover {
+  color: #ffffff;
+  text-shadow: 0 0 15px #65aaff;
+  transform: translateY(-2px);
+}
+
+.topbar nav .game-nav:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
