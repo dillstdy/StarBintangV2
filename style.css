@@ -523,3 +523,173 @@ footer b {
     transition-duration: .01ms !important;
   }
 }
+
+/* =====================================
+   iOS LIQUID GLASS NAVIGATION
+===================================== */
+
+.mobile-dock {
+  position: fixed;
+  isolation: isolate;
+  overflow: hidden;
+  gap: 0 !important;
+  padding: 8px !important;
+
+  background: rgba(19, 27, 48, .72) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+
+  backdrop-filter: blur(32px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
+
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.45),
+    inset 0 1px 1px rgba(255,255,255,.28),
+    inset 0 -1px 1px rgba(255,255,255,.05) !important;
+
+  transition: box-shadow .4s ease;
+}
+
+/* Sliding glass indicator */
+
+.mobile-dock::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+
+  width: calc((100% - 16px) / 4);
+
+  border-radius: 17px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.24),
+    rgba(110,155,255,.13)
+  );
+
+  border: 1px solid rgba(255,255,255,.17);
+
+  box-shadow:
+    0 5px 18px rgba(0,0,0,.15),
+    inset 0 1px 1px rgba(255,255,255,.3);
+
+  transform: translateX(
+    calc(var(--active-index, 0) * 100%)
+  );
+
+  transition:
+    transform .65s cubic-bezier(.22,1.4,.36,1),
+    background .3s ease;
+}
+
+/* Dock buttons */
+
+.mobile-dock a,
+.mobile-dock button {
+  position: relative;
+  z-index: 1;
+  border-radius: 17px;
+
+  transition:
+    transform .35s cubic-bezier(.22,1.4,.36,1),
+    color .3s ease,
+    opacity .3s ease;
+}
+
+.mobile-dock a.active {
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.mobile-dock .dock-icon {
+  display: inline-block;
+  font-size: 21px;
+
+  transition:
+    transform .4s cubic-bezier(.22,1.5,.36,1),
+    filter .3s ease;
+}
+
+.mobile-dock a.active .dock-icon {
+  transform: scale(1.22) translateY(-2px);
+  filter: drop-shadow(0 0 9px #7cb5ff);
+}
+
+/* Tap animation */
+
+.mobile-dock a:active,
+.mobile-dock button:active {
+  transform: scale(.82);
+}
+
+.mobile-dock .dock-upload {
+  background: linear-gradient(
+    135deg,
+    #4b9cff,
+    #7456ed,
+    #a34de4
+  ) !important;
+
+  box-shadow:
+    0 5px 20px rgba(65,120,255,.45),
+    inset 0 1px 1px rgba(255,255,255,.5);
+
+  transition:
+    transform .35s cubic-bezier(.22,1.5,.36,1),
+    box-shadow .3s ease;
+}
+
+.mobile-dock .dock-upload:active {
+  transform: scale(.86);
+  box-shadow: 0 2px 8px #397fff55;
+}
+
+/* Subtle glow */
+
+.mobile-dock::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background: linear-gradient(
+    120deg,
+    transparent 15%,
+    rgba(255,255,255,.09) 50%,
+    transparent 85%
+  );
+
+  transform: translateX(-100%);
+  animation: dockShine 7s ease-in-out infinite;
+}
+
+@keyframes dockShine {
+  0%, 65% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Smooth section entrance */
+
+.hero,
+.gallery-section,
+.about {
+  scroll-margin-top: 100px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-dock *,
+  .mobile-dock::before,
+  .mobile-dock::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
