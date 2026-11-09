@@ -185,6 +185,8 @@ if (window.innerWidth <= 600 &&
     });
   }
 }
+  
+});
 
 /* =====================================
    STARBINTANG — iOS NAVIGATION ENGINE
