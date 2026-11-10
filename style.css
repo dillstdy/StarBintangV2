@@ -1052,3 +1052,391 @@ footer b {
   opacity: 1;
   transform: scale(1);
 }
+
+
+/* ==========================================
+   STARBINTANG V2 — LAVENDER ROYAL THEME
+   Primary: #F7F7FF
+   Accent: #27187E
+========================================== */
+
+:root {
+  --bg: #F7F7FF;
+  --primary: #27187E;
+  --primary-light: #4939A8;
+  --text-main: #27187E;
+  --text-muted: #77739B;
+  --glass: rgba(255,255,255,.72);
+  --glass-border: rgba(39,24,126,.13);
+  --blue-glow: rgba(39,24,126,.16);
+  --red-glow: rgba(120,100,210,.10);
+}
+
+html,
+body {
+  background: #F7F7FF !important;
+  color: #27187E !important;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 10% 10%, #e5e2ff 0%, transparent 42%),
+    radial-gradient(ellipse at 90% 60%, #eceaff 0%, transparent 42%),
+    #F7F7FF !important;
+}
+
+/* Ambient */
+.ambient-one {
+  background: #7665d8 !important;
+}
+
+.ambient-two {
+  background: #27187E !important;
+  opacity: .12;
+}
+
+/* Navbar */
+.topbar {
+  background: rgba(247,247,255,.82) !important;
+  border-bottom: 1px solid rgba(39,24,126,.12) !important;
+  box-shadow: 0 8px 30px rgba(39,24,126,.08) !important;
+  backdrop-filter: blur(25px) saturate(160%);
+  -webkit-backdrop-filter: blur(25px) saturate(160%);
+}
+
+.brand,
+.topbar nav a {
+  color: #27187E !important;
+}
+
+.brand-star,
+.brand-accent {
+  color: #6554C8 !important;
+  text-shadow: none !important;
+}
+
+.brand small {
+  color: #77739B !important;
+}
+
+.topbar nav a:hover,
+.topbar nav .game-nav:hover {
+  color: #6554C8 !important;
+  text-shadow: 0 0 12px #6554C855;
+}
+
+/* Buttons */
+.button-yellow,
+.button-red {
+  background: linear-gradient(135deg,#4939A8,#27187E) !important;
+  color: white !important;
+  border: 1px solid #ffffff35 !important;
+}
+
+.button-outline {
+  color: #27187E !important;
+  border: 1px solid #27187E55 !important;
+  background: rgba(255,255,255,.65) !important;
+}
+
+/* Hero */
+.hero {
+  background:
+    radial-gradient(ellipse at 80% 30%,#bcb4ff88,transparent 48%),
+    linear-gradient(130deg,#F7F7FF,#e9e6ff 55%,#dcd6ff) !important;
+  color: #27187E !important;
+  border-bottom: 1px solid #27187E18;
+}
+
+.hero h1,
+.hero h1 span,
+.hero-copy > p,
+.tiny-note {
+  color: #27187E !important;
+  text-shadow: none !important;
+}
+
+.eyebrow {
+  color: #6554C8 !important;
+}
+
+.eyebrow i {
+  background: #6554C8 !important;
+}
+
+.hero h1 span {
+  background: linear-gradient(90deg,#27187E,#7665D8) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Floating cards */
+.glass-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.88),
+    rgba(220,215,255,.55)
+  ) !important;
+  border: 1px solid #ffffff !important;
+  box-shadow:
+    0 25px 60px #27187E25,
+    inset 0 1px 2px #ffffff !important;
+}
+
+.card-front,
+.card-back {
+  color: #27187E !important;
+}
+
+.card-back {
+  background: linear-gradient(145deg,#b9afff,#7564d4) !important;
+  color: white !important;
+}
+
+.sun,
+.float-star {
+  color: #6554C8 !important;
+  text-shadow: 0 0 20px #7665d855 !important;
+}
+
+/* Gallery */
+.gallery-section {
+  background: transparent !important;
+}
+
+.section-heading h2,
+.section-heading h2 span {
+  color: #27187E !important;
+}
+
+.section-heading p,
+.status-line {
+  color: #77739B !important;
+}
+
+.gallery-tools input {
+  background: white !important;
+  color: #27187E !important;
+  border: 1px solid #27187E25 !important;
+  box-shadow: 0 5px 18px #27187E08;
+}
+
+.gallery-tools input::placeholder {
+  color: #9994B8 !important;
+}
+
+.gallery-tools input:focus {
+  border-color: #6554C8 !important;
+  box-shadow: 0 0 0 3px #6554C822 !important;
+}
+
+/* Memory cards */
+.media-card {
+  background: rgba(255,255,255,.9) !important;
+  border: 1px solid #27187E15 !important;
+  box-shadow:
+    0 15px 40px #27187E10,
+    inset 0 1px 1px #ffffff !important;
+}
+
+.media-card:hover {
+  border-color: #6554C855 !important;
+  box-shadow:
+    0 25px 55px #27187E20,
+    0 0 25px #6554C815 !important;
+}
+
+.thumb {
+  background: linear-gradient(135deg,#e8e5ff,#f7f7ff) !important;
+}
+
+.media-info {
+  background: rgba(255,255,255,.94) !important;
+}
+
+.media-info h3 {
+  color: #27187E !important;
+}
+
+.media-info p {
+  color: #8580A5 !important;
+}
+
+.media-type {
+  color: #27187E !important;
+  background: #eceaff !important;
+  border: 1px solid #27187E20 !important;
+}
+
+/* Empty state */
+.empty-state {
+  color: #77739B !important;
+}
+
+.empty-state h3 {
+  color: #27187E !important;
+}
+
+/* About */
+.about {
+  background:
+    linear-gradient(135deg,#27187E,#4939A8) !important;
+  border: 1px solid #ffffff40 !important;
+  box-shadow: 0 25px 60px #27187E25 !important;
+}
+
+.about h2,
+.about h2 span,
+.about-mark {
+  color: white !important;
+}
+
+.about p {
+  color: #e4e0ff !important;
+}
+
+/* Footer */
+footer {
+  background: #27187E !important;
+  border-top: 1px solid #ffffff25 !important;
+  color: #e4e0ff !important;
+}
+
+footer b {
+  color: white !important;
+}
+
+/* Modal */
+.modal {
+  background: rgba(20,12,65,.88) !important;
+}
+
+.auth-card {
+  background: #F7F7FF !important;
+}
+
+.auth-card h2 {
+  color: #27187E !important;
+}
+
+/* Mobile navbar */
+@media(max-width:600px) {
+  .topbar {
+    background: rgba(247,247,255,.88) !important;
+  }
+
+  .hero {
+    background:
+      radial-gradient(ellipse at 50% 60%,#c9c1ff88,transparent 60%),
+      linear-gradient(150deg,#F7F7FF,#e9e6ff) !important;
+  }
+}
+
+/* Liquid Glass Dock */
+.mobile-dock {
+  background: rgba(247,247,255,.78) !important;
+  border: 1px solid rgba(39,24,126,.17) !important;
+  box-shadow:
+    0 18px 50px #27187E20,
+    inset 0 1px 2px #ffffff !important;
+}
+
+.mobile-dock a,
+.mobile-dock button {
+  color: #77739B !important;
+}
+
+.mobile-dock a.active {
+  color: #27187E !important;
+}
+
+.mobile-dock::before {
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.95),
+    rgba(210,204,255,.65)
+  ) !important;
+  border: 1px solid #27187E18 !important;
+  box-shadow: 0 5px 18px #27187E12 !important;
+}
+
+.mobile-dock .dock-upload {
+  background: linear-gradient(
+    135deg,#6554C8,#27187E
+  ) !important;
+  color: white !important;
+  box-shadow: 0 5px 20px #27187E40 !important;
+}
+
+.mobile-dock a.active .dock-icon,
+.mobile-dock .bubble-active .dock-icon {
+  filter: drop-shadow(0 0 8px #7665D888) !important;
+}
+
+/* Bubble effect */
+.liquid-bubble {
+  background: radial-gradient(
+    circle at 30% 25%,
+    rgba(255,255,255,.95),
+    rgba(180,170,255,.65) 45%,
+    rgba(39,24,126,.18)
+  ) !important;
+  border-color: rgba(255,255,255,.85) !important;
+  box-shadow:
+    0 0 20px #6554C855,
+    inset 0 2px 8px #ffffff !important;
+}
+
+/* Intro - lavender royal */
+.star-intro {
+  background:
+    radial-gradient(ellipse at 50% 45%,#4939A8 0%,transparent 48%),
+    #27187E !important;
+}
+
+.intro-glow-blue {
+  background: #7665D8 !important;
+}
+
+.intro-glow-red {
+  background: #A99BFF !important;
+}
+
+.intro-stars {
+  text-shadow: 0 0 20px #c4bbff !important;
+}
+
+.intro-eagle img {
+  filter: drop-shadow(0 0 25px #bdb2ff) !important;
+}
+
+.intro-logo img {
+  filter:
+    drop-shadow(0 0 15px #a99bff)
+    drop-shadow(0 0 35px #ffffff55) !important;
+}
+
+.intro-caption {
+  color: #F7F7FF !important;
+}
+
+.intro-loading span {
+  background: linear-gradient(90deg,#F7F7FF,#a99bff,#6554C8) !important;
+  box-shadow: 0 0 15px #a99bff !important;
+}
+
+/* Game link */
+.topbar nav .game-nav {
+  color: #4939A8 !important;
+}
+
+.topbar nav .game-nav::before {
+  background: #6554C820 !important;
+  border-color: #6554C840 !important;
+}
+
+.topbar nav .game-nav:hover {
+  color: #27187E !important;
+  text-shadow: 0 0 12px #6554C855 !important;
+}
