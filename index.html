@@ -108,7 +108,7 @@
     <section class="hero">
       <div class="hero-copy">
         <span class="eyebrow"><i></i> OUR LITTLE UNIVERSE</span>
-        <h1>Setiap momen<br>punya <span>ceritanya. Kalo kata alip " Kita ganteng kaya LEONARDO "</span></h1>
+        <h1>Setiap momen<br>punya <span>ceritanya.<span></h1>
         <p>Simpan, lihat kembali, dan bagikan foto serta video kenangan dalam satu tempat.</p>
         <div class="hero-actions"><a class="button button-yellow" href="#galeri">Lihat kenangan <b>↗</b></a><span class="tiny-note">Foto · Video · Cerita</span></div>
       </div>
@@ -125,6 +125,12 @@
         <div class="gallery-tools"><input id="searchInput" type="search" placeholder="Cari kenangan..."><button class="button button-red" id="uploadButton">＋ Tambah media</button></div>
       </div>
       <div class="status-line" id="statusLine">Menghubungkan ke galeri...</div>
+      <div class="notification-tools">
+  <button class="button button-outline" id="enableNotificationsButton" type="button">
+    🔔 Aktifkan Notifikasi
+  </button>
+  <span id="notificationStatus"></span>
+</div>
       <div class="gallery-grid" id="galleryGrid"></div>
       <div class="empty-state" id="emptyState" hidden><div>✧</div><h3>Belum ada kenangan</h3><p>Media yang diunggah akan muncul di sini.</p></div>
     </section>

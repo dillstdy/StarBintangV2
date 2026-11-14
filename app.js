@@ -1,5 +1,6 @@
 // 1) Isi dua nilai ini dari Supabase: Project Settings > API.
 const SUPABASE_URL = "https://guagqblvxndsbstlpdqj.supabase.co";
+const VAPID_PUBLIC_KEY = "BFkSrY3YF4yFY69nrImCy1UaJ_laltbZhreLiY7kdenv3vI-tBYKbIFfaAxC26n3purUoTbefql0glhbKU5rIgk";
 const SUPABASE_ANON_KEY = "sb_publishable_fdiGfQ7sKfR4FyfKiYwSOw_CpeaR-TU";
 const BUCKET = "starbintangv2-media";
 const TABLE = "memories";
@@ -8,6 +9,154 @@ const configured = SUPABASE_URL.startsWith("https://") && !SUPABASE_ANON_KEY.sta
 const db = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const $ = (id) => document.getElementById(id);
 let allMedia = [];
+// IDENTITAS PERANGKAT ANONIM
+function getDeviceId() {
+  let deviceId = localStorage.getItem("starbintang_device_id");
+
+  if (!deviceId) {
+    deviceId = crypto.randomUUID();
+    localStorage.setItem("starbintang_device_id", deviceId);
+  }
+
+  return deviceId;
+}
+
+// DETEKSI APLIKASI TERINSTAL
+function getInstallStatus() {
+  const standalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  return {
+    installed: standalone,
+    display_mode: standalone ? "standalone" : "browser"
+  };
+}
+
+// LOGIN ANONIM DAN CATAT PERANGKAT
+async function registerDevice() {
+  if (!db) return;
+
+  try {
+    let { data: { session } } = await db.auth.getSession();
+
+    if (!session) {
+      const { data, error } = await db.auth.signInAnonymously();
+
+      if (error) throw error;
+      session = data.session;
+    }
+
+    if (!session) throw new Error("Sesi anonim tidak tersedia.");
+
+    const deviceId = getDeviceId();
+    const installStatus = getInstallStatus();
+
+    const { error } = await db.functions.invoke("save-subscription", {
+      body: {
+        device_id: deviceId,
+        installed: installStatus.installed,
+        display_mode: installStatus.display_mode
+      }
+    });
+
+    if (error) throw error;
+
+    console.log("Perangkat berhasil dicatat.");
+  } catch (error) {
+    console.error("Gagal mencatat perangkat:", error);
+  }
+}
+// KONVERSI VAPID PUBLIC KEY
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+
+  const rawData = window.atob(base64);
+  const output = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    output[i] = rawData.charCodeAt(i);
+  }
+
+  return output;
+}
+// AKTIFKAN NOTIFIKASI STARBINTANG
+async function enablePushNotifications() {
+  const status = $("notificationStatus");
+  const button = $("enableNotificationsButton");
+
+  try {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      throw new Error("Browser ini belum mendukung Push Notification.");
+    }
+
+    if (!db) {
+      throw new Error("Supabase belum terhubung.");
+    }
+
+    if (Notification.permission === "denied") {
+      throw new Error("Izin notifikasi diblokir. Periksa pengaturan browser.");
+    }
+
+    button.disabled = true;
+    status.textContent = "Memproses...";
+
+    const permission = await Notification.requestPermission();
+
+    if (permission !== "granted") {
+      throw new Error("Izin notifikasi belum diberikan.");
+    }
+
+    const { data: { session } } = await db.auth.getSession();
+
+    if (!session) {
+      throw new Error("Sesi anonim belum tersedia. Muat ulang halaman.");
+    }
+
+    const registration = await navigator.serviceWorker.ready;
+
+    let subscription = await registration.pushManager.getSubscription();
+
+    if (!subscription) {
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+    }
+
+    const installStatus = getInstallStatus();
+
+    const { error } = await db.functions.invoke("save-subscription", {
+      body: {
+        device_id: getDeviceId(),
+        subscription: subscription.toJSON(),
+        installed: installStatus.installed,
+        display_mode: installStatus.display_mode
+      }
+    });
+
+    if (error) throw error;
+
+    status.textContent = "Notifikasi berhasil diaktifkan!";
+    button.textContent = "✓ Notifikasi Aktif";
+  } catch (error) {
+    console.error("Push notification error:", error);
+    status.textContent = error.message || "Gagal mengaktifkan notifikasi.";
+  } finally {
+    button.disabled = false;
+  }
+}
+// EVENT TOMBOL AKTIFKAN NOTIFIKASI
+document.addEventListener("DOMContentLoaded", () => {
+  const button = $("enableNotificationsButton");
+
+  if (button) {
+    button.addEventListener("click", enablePushNotifications);
+  }
+});
 
 function setStatus(message) { $("statusLine").textContent = message; }
 function safeName(name) { return name.replace(/[^\w.-]+/g, "_").slice(-90); }
@@ -98,8 +247,13 @@ $("searchInput").addEventListener("input", e => {
 document.addEventListener("keydown", e => { if (e.key === "Escape") { closeViewer(); $("authModal").classList.remove("open"); } });
 
 (async function init() {
-  if (!configured) { await loadGallery(); return; }
+  if (!configured) {
+    await loadGallery();
+    return;
+  }
+
   await loadGallery();
+  await registerDevice();
 })();
 
 /* ==========================================

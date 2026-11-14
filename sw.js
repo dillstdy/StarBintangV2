@@ -71,3 +71,55 @@ if (request.mode === "navigate") {
     })
   );
 });
+
+// MENERIMA PUSH NOTIFICATION
+self.addEventListener("push", (event) => {
+  let data = {};
+
+  if (event.data) {
+    try {
+      data = event.data.json();
+    } catch {
+      data = { body: event.data.text() };
+    }
+  }
+
+  const title = data.title || "StarBintangV2";
+  const options = {
+    body: data.body || "Ada kenangan baru yang diunggah!",
+    icon: "/icons/icon-192.png",
+    badge: "/icons/icon-192.png",
+    data: {
+      url: data.url || "/"
+    }
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+// SAAT NOTIFIKASI DITEKAN
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const targetUrl = new URL(
+    event.notification.data?.url || "/",
+    self.location.origin
+  ).href;
+
+  event.waitUntil(
+    clients.matchAll({
+      type: "window",
+      includeUncontrolled: true
+    }).then((windowClients) => {
+      for (const client of windowClients) {
+        if (client.url.startsWith(self.location.origin)) {
+          return client.navigate(targetUrl).then(() => client.focus());
+        }
+      }
+
+      return clients.openWindow(targetUrl);
+    })
+  );
+});
