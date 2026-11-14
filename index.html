@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#101a42">
+  <link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta name="theme-color" content="#2563eb">
   <meta name="description" content="StarBintangV2 — galeri foto dan video kenangan bersama.">
   <title>StarBintangV2 — Galeri Kenangan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,6 +38,32 @@
 
   <button id="skipIntro" class="intro-skip">LEWATI INTRO ↗</button>
 </div>
+  <!-- PILIH MODE USER / ADMIN -->
+  <section id="modeGate" class="mode-gate" hidden aria-labelledby="modeTitle">
+    <div class="mode-panel">
+      <img class="mode-logo" src="starbintang-logo-transparant.png" alt="Logo StarBintang">
+
+      <span class="mode-eyebrow">WELCOME TO</span>
+      <h1 id="modeTitle">StarBintang<span>V2</span></h1>
+      <p class="mode-description">Pilih mode untuk melanjutkan</p>
+
+      <button type="button" id="userModeButton" class="mode-card mode-user">
+        <span class="mode-icon">✦</span>
+        <span class="mode-card-title">USER</span>
+        <span class="mode-card-description">Masuk ke galeri kenangan</span>
+        <span class="mode-arrow">→</span>
+      </button>
+
+      <button type="button" id="adminModeButton" class="mode-card mode-admin">
+        <span class="mode-icon">♜</span>
+        <span class="mode-card-title">ADMIN</span>
+        <span class="mode-card-description">Kelola galeri dan media</span>
+        <span class="mode-arrow">→</span>
+      </button>
+
+      <small class="mode-footer">MEMORY GALLERY · STARBINTANGV2</small>
+    </div>
+  </section>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
   <header class="topbar">
     <a class="brand" href="#"><span class="brand-star">✦</span><span>Star<span class="brand-accent">Bintang</span><small>V2 · MEMORY GALLERY</small></span></a>

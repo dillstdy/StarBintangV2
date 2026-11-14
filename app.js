@@ -189,156 +189,44 @@ if (window.innerWidth <= 600 &&
 });
 
 /* =====================================
-   STARBINTANG — iOS NAVIGATION ENGINE
+   STARBINTANG — SINGLE LIQUID NAVIGATION
 ===================================== */
 
 (function () {
-
-  function initLiquidNavigation() {
-
+  function initNavigation() {
     const dock = document.querySelector(".mobile-dock");
 
-    if (!dock || dock.dataset.liquidReady === "true") return;
+    if (!dock || dock.dataset.navigationReady === "true") return;
+    dock.dataset.navigationReady = "true";
 
-    dock.dataset.liquidReady = "true";
-
-    const links = [...dock.querySelectorAll("a")];
-    const upload = dock.querySelector(".dock-upload");
+    const items = [...dock.querySelectorAll("a, .dock-upload")];
+    const uploadButton = document.getElementById("uploadButton");
 
     const sections = [
       document.querySelector(".hero"),
-      document.querySelector(".gallery-section"),
+      document.querySelector("#galeri"),
       null,
-      document.querySelector(".about")
+      null,
+      document.querySelector("#tentang")
     ];
 
-    // Sliding active indicator
-    function setActive(index) {
-
-      dock.style.setProperty("--active-index", index);
-
-      links.forEach((link, i) => {
-        link.classList.toggle("active", i === index);
-      });
-
-    }
-
-    setActive(0);
-
-    // Smooth navigation
-   links.forEach((link, index) => {
-  link.addEventListener("click", function(event) {
-
-    // Game: biarkan browser membuka game.html
-    if (link.getAttribute("href") === "game.html") {
+    if (items.length !== 5) {
+      console.warn("StarBintang: jumlah item navigasi tidak sesuai.");
       return;
     }
-
-    event.preventDefault();
-
-    const dockIndex = index === 3 ? 4 : index;
-    setActive(dockIndex);
-
-    const target = sections[index];
-
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    } else if (index === 0) {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    }
-  });
-});
-    // Upload button animation
-    if (upload) {
-
-      upload.addEventListener("click", function () {
-
-        upload.animate(
-          [
-            { transform: "scale(1)" },
-            { transform: "scale(.82)" },
-            { transform: "scale(1.12)" },
-            { transform: "scale(1)" }
-          ],
-          {
-            duration: 450,
-            easing: "cubic-bezier(.22,1.4,.36,1)"
-          }
-        );
-
-      });
-
-    }
-
-    // Automatically update selected menu while scrolling
-    const observer = new IntersectionObserver(entries => {
-
-      const visible = entries
-        .filter(entry => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-      if (!visible.length) return;
-
-      const index = sections.indexOf(visible[0].target);
-
-      if (index >= 0) setActive(index);
-
-    }, {
-      threshold: [0.2, 0.4, 0.6],
-      rootMargin: "-15% 0px -35% 0px"
-    });
-
-    sections.forEach(section => {
-      if (section) observer.observe(section);
-    });
-
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initLiquidNavigation);
-  } else {
-    initLiquidNavigation();
-  }
-
-})();
-
-/* LIQUID BUBBLE DRAG NAVIGATION */
-
-(function () {
-  function initBubbleNavigation() {
-    const dock = document.querySelector(".mobile-dock");
-    if (!dock || dock.dataset.bubbleReady) return;
-
-    dock.dataset.bubbleReady = "true";
-
-    const items = [
-      ...dock.querySelectorAll("a, .dock-upload")
-    ];
 
     const bubble = document.createElement("div");
     bubble.className = "liquid-bubble";
     dock.appendChild(bubble);
 
-    let dragging = false;
     let activeIndex = 0;
-
-    function getIndex(x, y) {
-      const found = items.findIndex(item => {
-        const r = item.getBoundingClientRect();
-        return x >= r.left - 5 && x <= r.right + 5 &&
-               y >= r.top - 5 && y <= r.bottom + 5;
-      });
-      return found;
-    }
+    let pointerStart = null;
+    let dragIndex = -1;
+    let dragged = false;
+    let suppressClick = false;
 
     function moveBubble(index) {
-      if (index < 0) return;
+      if (index < 0 || index >= items.length) return;
 
       const rect = items[index].getBoundingClientRect();
       const dockRect = dock.getBoundingClientRect();
@@ -352,98 +240,256 @@ if (window.innerWidth <= 600 &&
       items.forEach((item, i) => {
         item.classList.toggle("bubble-active", i === index);
       });
-
-      activeIndex = index;
     }
 
-    dock.addEventListener("pointerdown", event => {
-      if (event.target.closest("button") &&
-          !event.target.closest(".dock-upload")) return;
+    function setActive(index) {
+      if (index < 0 || index >= items.length) return;
 
-      const index = getIndex(event.clientX, event.clientY);
-      if (index < 0) return;
+      activeIndex = index;
+      dock.style.setProperty("--active-index", index);
 
-      dragging = true;
-      dock.classList.add("dragging-dock");
-      bubble.classList.add("visible", "dragging");
+      items.forEach((item, i) => {
+        item.classList.toggle("active", i === index);
+      });
 
       moveBubble(index);
+    }
 
-      try {
-        dock.setPointerCapture(event.pointerId);
-      } catch (_) {}
-    });
+    function activate(index) {
+      if (index < 0 || index >= items.length) return;
 
-    dock.addEventListener("pointermove", event => {
-      if (!dragging) return;
+      setActive(index);
 
-      const index = getIndex(event.clientX, event.clientY);
-      if (index >= 0) moveBubble(index);
-    });
-
-    function finishDrag() {
-      if (!dragging) return;
-
-      dragging = false;
-      dock.classList.remove("dragging-dock");
-      bubble.classList.remove("dragging");
-
-      setTimeout(() => {
-        bubble.classList.remove("visible");
-      }, 350);
-
-      if (activeIndex === 3) {
-        const upload = document.getElementById("uploadButton");
-        if (upload) upload.click();
+      if (index === 3) {
+        if (uploadButton) uploadButton.click();
         return;
       }
 
-      const link = items[activeIndex];
-      if (link && link.tagName === "A") {
-        link.click();
+      if (index === 2) {
+        window.location.href = "game.html";
+        return;
+      }
+
+      if (index === 0) {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+        return;
+      }
+
+      const section = sections[index];
+
+      if (section) {
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
       }
     }
 
-    dock.addEventListener("pointerup", finishDrag);
-    dock.addEventListener("pointercancel", finishDrag);
+    setActive(0);
+
+    // Klik navigasi biasa
+    items.forEach((item, index) => {
+      item.addEventListener("click", event => {
+        if (suppressClick) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+
+        if (index === 2) return;
+
+        event.preventDefault();
+        activate(index);
+      });
+    });
+
+    // Deteksi posisi item ketika disentuh
+    function getIndex(x, y) {
+      return items.findIndex(item => {
+        const rect = item.getBoundingClientRect();
+
+        return (
+          x >= rect.left - 8 &&
+          x <= rect.right + 8 &&
+          y >= rect.top - 8 &&
+          y <= rect.bottom + 8
+        );
+      });
+    }
+
+    // Mulai sentuhan
+    dock.addEventListener("pointerdown", event => {
+      const item = event.target.closest("a, .dock-upload");
+
+      if (!item || !dock.contains(item)) return;
+
+      pointerStart = {
+        x: event.clientX,
+        y: event.clientY,
+        id: event.pointerId
+      };
+
+      dragIndex = items.indexOf(item);
+      dragged = false;
+
+      bubble.classList.add("visible");
+      moveBubble(dragIndex);
+    });
+
+    // Geser bubble
+    dock.addEventListener("pointermove", event => {
+      if (!pointerStart || pointerStart.id !== event.pointerId) return;
+
+      const dx = event.clientX - pointerStart.x;
+      const dy = event.clientY - pointerStart.y;
+
+      if (!dragged && Math.hypot(dx, dy) > 9) {
+        dragged = true;
+        dock.classList.add("dragging-dock");
+        bubble.classList.add("dragging");
+
+        try {
+          dock.setPointerCapture(event.pointerId);
+        } catch (_) {}
+      }
+
+      if (!dragged) return;
+
+      event.preventDefault();
+
+      const index = getIndex(event.clientX, event.clientY);
+
+      if (index >= 0) {
+        dragIndex = index;
+        moveBubble(index);
+      }
+    });
+
+    // Selesaikan sentuhan atau drag
+    function finishPointer(event) {
+      if (!pointerStart || pointerStart.id !== event.pointerId) return;
+
+      const wasDragged = dragged;
+      const finalIndex = dragIndex;
+
+      pointerStart = null;
+      dragged = false;
+
+      dock.classList.remove("dragging-dock");
+      bubble.classList.remove("dragging");
+
+      if (wasDragged && finalIndex >= 0) {
+        suppressClick = true;
+        activate(finalIndex);
+
+        setTimeout(() => {
+          suppressClick = false;
+        }, 350);
+      }
+
+      setTimeout(() => {
+        bubble.classList.remove("visible");
+      }, 300);
+    }
+
+    dock.addEventListener("pointerup", finishPointer);
+    dock.addEventListener("pointercancel", finishPointer);
+
+    // Perbarui menu sesuai posisi scroll
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+      if (!visible.length) return;
+
+      const section = visible[0].target;
+      const index = sections.indexOf(section);
+
+      if (index >= 0) setActive(index);
+    }, {
+      threshold: [0.2, 0.4, 0.6],
+      rootMargin: "-15% 0px -35% 0px"
+    });
+
+    sections.forEach(section => {
+      if (section) observer.observe(section);
+    });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initBubbleNavigation);
+    document.addEventListener("DOMContentLoaded", initNavigation);
   } else {
-    initBubbleNavigation();
+    initNavigation();
   }
 })();
 
 /* =====================================
-   STARBINTANG INTRO CONTROLLER
+   STARBINTANG INTRO + MODE SELECTOR
 ===================================== */
 
 (function () {
   const intro = document.getElementById("starIntro");
   const skip = document.getElementById("skipIntro");
 
-  if (!intro) return;
+  const modeGate = document.getElementById("modeGate");
+  const userButton = document.getElementById("userModeButton");
+  const adminButton = document.getElementById("adminModeButton");
+
+  // Tampilkan pilihan USER / ADMIN
+  function showModeGate() {
+    if (modeGate) {
+      modeGate.hidden = false;
+    }
+  }
+
+  // Pilihan USER: masuk ke galeri utama
+  if (userButton) {
+    userButton.addEventListener("click", () => {
+      modeGate.hidden = true;
+    });
+  }
+
+  // Pilihan ADMIN: buka halaman admin
+  if (adminButton) {
+    adminButton.addEventListener("click", () => {
+      window.location.href = "https://adminstarbintangv2.pages.dev";
+    });
+  }
+
+  // Jika elemen intro tidak ditemukan
+  if (!intro) {
+    showModeGate();
+    return;
+  }
+
+  let introClosing = false;
 
   function closeIntro() {
-    if (!intro.isConnected) return;
+    if (introClosing || !intro.isConnected) return;
 
+    introClosing = true;
     intro.classList.add("intro-exit");
 
     setTimeout(() => {
       intro.remove();
+      showModeGate();
     }, 1100);
   }
 
-  // Hanya tampil sekali setiap sesi browser
+  // Intro hanya sekali setiap sesi browser
   if (sessionStorage.getItem("starbintangIntroSeen")) {
     intro.remove();
+    showModeGate();
     return;
   }
 
   sessionStorage.setItem("starbintangIntroSeen", "true");
 
-  // Tombol lewati
+  // Tombol lewati intro
   if (skip) {
     skip.addEventListener("click", closeIntro);
   }
@@ -452,3 +498,20 @@ if (window.innerWidth <= 600 &&
   setTimeout(closeIntro, 5200);
 
 })();
+
+/* STARBINTANG — PWA SERVICE WORKER */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((registration) => {
+        console.log(
+          "StarBintang PWA aktif:",
+          registration.scope
+        );
+      })
+      .catch((error) => {
+        console.error("PWA gagal diaktifkan:", error);
+      });
+  });
+}

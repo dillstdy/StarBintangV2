@@ -1440,3 +1440,640 @@ footer b {
   color: #27187E !important;
   text-shadow: 0 0 12px #6554C855 !important;
 }
+
+
+/* =====================================
+   STARBINTANG — GALLERY CARD FIX
+===================================== */
+
+.gallery-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+  align-items: start;
+}
+
+.media-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgba(100, 116, 139, .15);
+  box-shadow: 0 5px 18px rgba(15, 23, 42, .07);
+  cursor: pointer;
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.media-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, .12);
+}
+
+.thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+
+.thumb img,
+.thumb video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.media-info > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.media-info h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.media-info p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.media-type {
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.video-thumb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(15, 23, 42, .7);
+  color: white;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .media-card {
+    border-radius: 14px;
+  }
+
+  .media-info {
+    padding: 10px;
+  }
+
+  .media-info h3 {
+    font-size: 12px;
+  }
+
+  .media-info p {
+    font-size: 10px;
+  }
+}
+
+
+/* =====================================
+   STARBINTANG V2 — FINAL COLOR THEME
+   YELLOW • GREEN • BLUE
+===================================== */
+
+:root {
+  --bg: #f8fafc;
+  --primary: #2563eb;
+  --yellow: #facc15;
+  --green: #16a34a;
+  --blue: #2563eb;
+  --text-main: #172033;
+  --text-muted: #64748b;
+}
+
+/* Background */
+html,
+body {
+  background: #f8fafc !important;
+  color: #172033 !important;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 10% 10%, #fef9c3 0%, transparent 38%),
+    radial-gradient(ellipse at 90% 55%, #dcfce7 0%, transparent 38%),
+    #f8fafc !important;
+}
+
+/* Ambient */
+.ambient-one {
+  background: #facc15 !important;
+}
+
+.ambient-two {
+  background: #16a34a !important;
+  opacity: .13 !important;
+}
+
+/* Navbar */
+.topbar {
+  background: rgba(255,255,255,.88) !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  box-shadow: 0 5px 25px #17203310 !important;
+}
+
+.brand,
+.topbar nav a {
+  color: #172033 !important;
+}
+
+.brand-star,
+.brand-accent {
+  color: #2563eb !important;
+  text-shadow: none !important;
+}
+
+.brand small {
+  color: #64748b !important;
+}
+
+/* Buttons */
+.button-yellow {
+  background: #facc15 !important;
+  color: #172033 !important;
+}
+
+.button-red {
+  background: #16a34a !important;
+  color: white !important;
+}
+
+.button-outline {
+  background: white !important;
+  color: #2563eb !important;
+  border: 1px solid #2563eb55 !important;
+}
+
+/* Hero */
+.hero {
+  background:
+    radial-gradient(circle at 15% 20%, #fef08a66, transparent 35%),
+    radial-gradient(circle at 85% 75%, #86efac55, transparent 35%),
+    linear-gradient(120deg, #eff6ff, #ffffff) !important;
+  color: #172033 !important;
+}
+
+.hero h1,
+.hero h1 span,
+.hero-copy > p,
+.tiny-note {
+  color: #172033 !important;
+  text-shadow: none !important;
+}
+
+.hero h1 span {
+  background: linear-gradient(90deg, #2563eb, #16a34a) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.eyebrow {
+  color: #16a34a !important;
+}
+
+.eyebrow i {
+  background: #facc15 !important;
+}
+
+/* Hero cards */
+.glass-card {
+  border: 1px solid #ffffff !important;
+  box-shadow: 0 20px 45px #17203318 !important;
+}
+
+.card-front {
+  background: linear-gradient(145deg, #dbeafe, #bbf7d0) !important;
+  color: #172033 !important;
+}
+
+.card-back {
+  background: linear-gradient(145deg, #facc15, #fde68a) !important;
+  color: #172033 !important;
+}
+
+.sun,
+.float-star {
+  color: #2563eb !important;
+  text-shadow: none !important;
+}
+
+/* Gallery */
+.gallery-section {
+  background: transparent !important;
+}
+
+.section-heading h2,
+.section-heading h2 span {
+  color: #172033 !important;
+}
+
+.section-heading h2 span {
+  color: #2563eb !important;
+}
+
+.section-heading p,
+.status-line {
+  color: #64748b !important;
+}
+
+.gallery-tools input {
+  background: white !important;
+  color: #172033 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.gallery-tools input:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px #2563eb20 !important;
+}
+
+/* Gallery cards */
+.media-card {
+  background: white !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 8px 25px #1720330c !important;
+}
+
+.media-card:hover {
+  border-color: #86efac !important;
+  box-shadow: 0 14px 30px #16a34a18 !important;
+}
+
+.media-info {
+  background: white !important;
+}
+
+.media-info h3 {
+  color: #172033 !important;
+}
+
+.media-info p {
+  color: #64748b !important;
+}
+
+.media-type {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border: 1px solid #bbf7d0 !important;
+}
+
+/* About */
+.about {
+  background: linear-gradient(120deg, #2563eb, #16a34a) !important;
+  border: none !important;
+  box-shadow: 0 15px 35px #2563eb20 !important;
+}
+
+.about h2,
+.about h2 span,
+.about-mark,
+.about p {
+  color: white !important;
+}
+
+/* Footer */
+footer {
+  background: #172033 !important;
+  color: #e2e8f0 !important;
+}
+
+footer b {
+  color: #facc15 !important;
+}
+
+/* Modal */
+.modal {
+  background: rgba(15, 23, 42, .85) !important;
+}
+
+.auth-card {
+  background: white !important;
+}
+
+.auth-card h2 {
+  color: #172033 !important;
+}
+
+/* Mobile Liquid Glass */
+.mobile-dock {
+  background: rgba(255,255,255,.78) !important;
+  border: 1px solid rgba(255,255,255,.9) !important;
+  box-shadow: 0 12px 35px #17203320 !important;
+}
+
+.mobile-dock a,
+.mobile-dock button {
+  color: #64748b !important;
+}
+
+.mobile-dock a.active {
+  color: #2563eb !important;
+}
+
+.mobile-dock::before {
+  background: linear-gradient(
+    120deg,
+    #fef9c3aa,
+    #dcfce7aa,
+    #dbeafeaa
+  ) !important;
+}
+
+.mobile-dock .dock-upload {
+  background: #16a34a !important;
+  color: white !important;
+}
+
+.liquid-bubble {
+  background: rgba(219,234,254,.85) !important;
+  border: 1px solid white !important;
+  box-shadow: 0 5px 20px #2563eb25 !important;
+}
+
+
+/* LIQUID GLASS — FINAL TOUCH */
+.mobile-dock {
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 12px 32px rgba(30, 41, 59, 0.14),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+  transition: box-shadow 0.25s ease, background 0.25s ease !important;
+}
+
+.mobile-dock a,
+.mobile-dock button {
+  transition:
+    transform 0.22s ease,
+    color 0.22s ease,
+    background 0.22s ease !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-dock a:active,
+.mobile-dock button:active {
+  transform: scale(1.16) !important;
+}
+
+.mobile-dock .dock-upload {
+  box-shadow: 0 5px 14px rgba(22, 163, 74, 0.25);
+}
+
+.liquid-bubble {
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  transition: transform 0.28s cubic-bezier(.2,.8,.2,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-dock,
+  .mobile-dock a,
+  .mobile-dock button,
+  .liquid-bubble {
+    transition: none !important;
+  }
+}
+
+
+/* MOBILE PERFORMANCE — SMOOTH TOUCH */
+@media (max-width: 768px) {
+  .mobile-dock {
+    transform: translateX(-50%) translateZ(0);
+    -webkit-transform: translateX(-50%) translateZ(0);
+    will-change: transform;
+    touch-action: pan-y;
+    isolation: isolate;
+  }
+
+  .mobile-dock a,
+  .mobile-dock button {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+    transition:
+      transform 220ms cubic-bezier(.2,.8,.2,1),
+      color 220ms ease !important;
+  }
+
+  .mobile-dock a:active,
+  .mobile-dock button:active {
+    transform: scale(1.12) translateZ(0) !important;
+  }
+
+  .liquid-bubble {
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-dock,
+  .mobile-dock *,
+  .liquid-bubble {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-dock,
+  .mobile-dock *,
+  .liquid-bubble {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* =====================================
+   STARBINTANG — STARTUP MODE SELECTOR
+===================================== */
+
+.mode-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(37,99,235,.18), transparent 38%),
+    radial-gradient(circle at 85% 85%, rgba(250,204,21,.22), transparent 40%),
+    #f8fafc;
+}
+
+.mode-gate[hidden] {
+  display: none !important;
+}
+
+.mode-panel {
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 22px;
+  border-radius: 28px;
+  background: rgba(255,255,255,.88);
+  border: 1px solid rgba(37,99,235,.12);
+  box-shadow: 0 20px 60px rgba(15,23,42,.12);
+  text-align: center;
+}
+
+.mode-logo {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+}
+
+.mode-eyebrow {
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.mode-panel h1 {
+  margin: 0;
+  color: #172554;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.mode-panel h1 span {
+  color: #2563eb;
+}
+
+.mode-description {
+  margin: 0 0 10px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.mode-card {
+  position: relative;
+  width: 100%;
+  min-height: 86px;
+  display: grid;
+  grid-template-columns: 48px 1fr 24px;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  column-gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1px solid transparent;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.mode-card:active {
+  transform: scale(.98);
+}
+
+.mode-user {
+  background: #eaf2ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.mode-admin {
+  background: #fff8df;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.mode-icon {
+  grid-row: 1 / 3;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #fff;
+  font-size: 24px;
+}
+
+.mode-card-title {
+  align-self: end;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.mode-card-description {
+  align-self: start;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.mode-arrow {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  justify-self: end;
+  font-size: 24px;
+}
+
+.mode-footer {
+  margin-top: 8px;
+  color: #94a3b8;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 420px) {
+  .mode-panel {
+    padding: 24px 18px;
+  }
+}
